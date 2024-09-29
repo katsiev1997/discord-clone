@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ClerkProvider, SignInButton, SignedOut } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import clsx from "clsx";
 
 const geistSans = localFont({
     src: "./fonts/GeistVF.woff",
@@ -26,13 +28,24 @@ export default function RootLayout({
 }>) {
     return (
         <ClerkProvider>
-            <html lang="en">
-                <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                    <SignedOut>
-                        <SignInButton />
-                    </SignedOut>
-                    
-                    {children}
+            <html lang="en" suppressHydrationWarning>
+                <body
+                    className={clsx(
+                        geistSans.variable,
+                        geistMono.variable,
+                        "antialiased",
+                        "bg-white dark:bg-[#313338]"
+                    )}
+                >
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        enableSystem
+                        storageKey="discord-theme"
+                        disableTransitionOnChange
+                    >
+                        {children}
+                    </ThemeProvider>
                 </body>
             </html>
         </ClerkProvider>
